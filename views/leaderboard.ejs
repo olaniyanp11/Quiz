@@ -1,0 +1,55 @@
+<%- include('./partials/header') %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <div class="max-w-4xl mx-auto mt-24 p-6 bg-white rounded shadow">
+        <h1 class="text-3xl font-bold mb-6 text-green-800">Leaderboard</h1>
+
+        <% if (leaderboard.length===0) { %>
+            <p class="text-gray-700">No scores yet. Be the first to take a quiz!</p>
+            <% } else { %>
+                <table class="w-full table-auto border-collapse border">
+                    <thead>
+                        <tr class="bg-green-100 text-left">
+                            <th class="px-4 py-2 border">#</th>
+                            <th class="px-4 py-2 border">User</th>
+                            <th class="px-4 py-2 border">Total Score</th>
+                            <th class="px-4 py-2 border">Quizzes Taken</th>
+                            <th class="px-4 py-2 border">Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% leaderboard.forEach((entry, idx)=> { %>
+                            <tr class="<%= idx % 2 === 0 ? 'bg-gray-50' : '' %>">
+                                <td class="px-4 py-2 border">
+                                    <%= idx + 1 %>
+                                </td>
+                                <td class="px-4 py-2 border flex items-center space-x-2">
+                                    <img src="<%= entry._id.profilePic || '/images/default-avatar.png' %>"
+                                        class="w-8 h-8 rounded-full">
+                                    <span>
+                                        <%= entry._id.name %>
+                                    </span>
+                                </td>
+                                <td class="px-4 py-2 border font-bold text-green-700">
+                                    <%= entry.totalScore %>
+                                </td>
+                                <td class="px-4 py-2 border">
+                                    <%= entry.quizzesTaken %>
+                                </td>
+                                <td class="px-4 py-2 border">
+                                    <% const stars=Math.round(entry._id.rating || 0); %>
+                                        <% for (let i=0; i < stars; i++) { %>
+                                            <i class="fa-solid fa-star text-yellow-400"></i>
+                                            <% } %>
+                                                <% for (let i=stars; i < 5; i++) { %>
+                                                    <i class="fa-regular fa-star text-gray-300"></i>
+                                                    <% } %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+                <% } %>
+    </div>
+
+    <%- include('./partials/footer') %>

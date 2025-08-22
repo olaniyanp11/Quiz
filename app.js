@@ -9,6 +9,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const dotenv = require('dotenv')
 const User = require('./models/User'); // Adjust path as needed
+const getUser = require('./middlewares/getUser');
 dotenv.config()
 const app = express();
 
@@ -33,13 +34,14 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
+app.use(express.static('uploads'));
 app.use(morgan('tiny'));
 app.use(cookieparser());
 app.use('/', route);
 
 
-app.use((req, res, next)=>{
-    res.render('404', { title: '404 Not Found' ,navColor: 'text-green-500'});
+app.use(getUser,(req, res, next)=>{
+    res.render('404', { title: '404 Not Found' ,navColor: 'text-green-500',user:req.user});
 })
 
 app.listen(3000, async () => {

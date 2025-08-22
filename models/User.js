@@ -23,9 +23,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Password is required"],
     minlength: 6
+  },
+  profilePic: {
+    type: String,
+    default: '/images/default-avatar.png' // default avatar
+  },
+  rating: {
+    type: Number,
+    default: 0, // can be total score or average rating
+    min: 0,
+    max: 5
   }
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
-
 module.exports = User;

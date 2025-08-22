@@ -17,61 +17,28 @@
       <div class="flex-shrink-0 text-green-700 font-bold text-2xl">
         QuizApp
       </div>
-
-      <!-- Desktop Menu -->
       <div class="hidden md:flex items-center space-x-6">
-        <a href="/" class="hover:text-green-300 text-green-700">Home</a>
-        <a href="#how-it-works" class="hover:text-green-300 text-green-700">How It Works</a>
-        <a href="#leaderboard" class="hover:text-green-300 text-green-700">Leaderboard</a>
+        <a href="/" class="hover:text-green-300 <%= user ? 'text-green-700' : 'text-white' %>">Home</a>
+        <a href="#how-it-works" class="hover:text-green-300 <%= user ? 'text-green-700' : 'text-white' %>">How It
+          Works</a>
+        <a href="/leaderboard"
+          class="hover:text-green-300 <%= user ? 'text-green-700' : 'text-white' %>">Leaderboard</a>
 
-        <% if (user) { %>
-          <% if (user.role === 'admin') { %>
-            <a href="/quizzes/add" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Add Quiz</a>
-            <a href="/admin" class="bg-white text-green-600 px-4 py-2 rounded hover:bg-gray-100">Dashboard</a>
-            <% } else { %>
-              <a href="/quizzes" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Take Quiz</a>
-              <a href="/dashboard" class="bg-white text-green-600 px-4 py-2 rounded hover:bg-gray-100">Dashboard</a>
-          <% } %>
-          <a href="/logout" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</a>
-        <% } else { %>
+        <% if(!user){ %>
           <a href="/login" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Login</a>
           <a href="/register" class="bg-white text-green-600 px-4 py-2 rounded hover:bg-gray-100">Sign Up</a>
-        <% } %>
-      </div>
-
-      <!-- Mobile menu button -->
-      <div class="md:hidden flex items-center">
-        <button id="menu-btn" class="text-white focus:outline-none">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-               xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-        </button>
+          <% } else { %>
+            <% if(user.role==='admin' ){ %>
+              <a href="/admin" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Admin</a>
+              <% } %>
+                <a href="/dashboard" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Dashboard</a>
+                <a href="/logout" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</a>
+                <% } %>
       </div>
     </div>
   </div>
-
-  <!-- Mobile Menu -->
-  <div class="md:hidden hidden px-2 pt-2 pb-3 space-y-1 bg-green-800" id="mobile-menu">
-    <a href="/" class="block text-white px-3 py-2 rounded hover:bg-green-700">Home</a>
-    <a href="#how-it-works" class="block text-white px-3 py-2 rounded hover:bg-green-700">How It Works</a>
-    <a href="#leaderboard" class="block text-white px-3 py-2 rounded hover:bg-green-700">Leaderboard</a>
-
-    <% if (user) { %>
-      <% if (user.role === 'admin') { %>
-        <a href="/quizzes/add" class="block bg-green-500 px-3 py-2 rounded text-white hover:bg-green-600">Add Quiz</a>
-      <% } else { %>
-        <a href="/quizzes" class="block bg-green-500 px-3 py-2 rounded text-white hover:bg-green-600">Take Quiz</a>
-      <% } %>
-      <a href="/admin" class="block bg-white text-green-600 px-3 py-2 rounded hover:bg-gray-100">Dashboard</a>
-      <a href="/logout" class="block bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600">Logout</a>
-    <% } else { %>
-      <a href="/login" class="block bg-green-500 px-3 py-2 rounded text-white hover:bg-green-600">Login</a>
-      <a href="/register" class="block bg-white text-green-600 px-3 py-2 rounded hover:bg-gray-100">Sign Up</a>
-    <% } %>
-  </div>
 </nav>
+
 
 <script>
   // Mobile menu toggle

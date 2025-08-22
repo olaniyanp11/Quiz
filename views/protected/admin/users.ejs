@@ -1,0 +1,57 @@
+<%- include('../../partials/header', { user }) %>
+
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-green-700 mb-6">All Users</h1>
+
+    <% if (users.length===0) { %>
+      <p class="text-gray-600">No users found.</p>
+      <% } else { %>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white shadow rounded-lg overflow-hidden">
+            <thead class="bg-green-100">
+              <tr>
+                <th class="px-6 py-3 text-left text-gray-700">Profile</th>
+                <th class="px-6 py-3 text-left text-gray-700">Name</th>
+                <th class="px-6 py-3 text-left text-gray-700">Email</th>
+                <th class="px-6 py-3 text-left text-gray-700">Rating</th>
+                <th class="px-6 py-3 text-left text-gray-700">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% users.forEach(u=> { %>
+                <tr class="border-b hover:bg-green-50">
+                  <td class="px-6 py-4">
+                    <img src="<%= u.profilePic %>" alt="Avatar" class="w-12 h-12 rounded-full object-cover">
+                  
+                  </td>
+                  <td class="px-6 py-4">
+                    <%= u.name %>
+                  </td>
+                  <td class="px-6 py-4">
+                    <%= u.email %>
+                  </td>
+                  <td class="px-6 py-4">
+                    <% for(let i=1;i<=5;i++){ %>
+                      <% if(i <=Math.round(u.rating)){ %>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <% } else { %>
+                          <i class="far fa-star text-gray-300"></i>
+                          <% } %>
+                            <% } %>
+                  </td>
+                  <td class="px-6 py-4">
+                    <form action="/users/delete/<%= u._id %>" method="POST" onsubmit="return confirm('Are you sure?');">
+                      <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                        Delete
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+                <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <% } %>
+  </div>
+
+  <%- include('../../partials/footer') %>

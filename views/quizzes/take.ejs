@@ -1,0 +1,52 @@
+<%- include('../partials/header') %>
+
+    <div class="max-w-4xl mx-auto mt-20 p-6 bg-white rounded shadow">
+        <h1 class="text-2xl font-bold mb-4 text-green-800">
+            <%= quiz.title %>
+        </h1>
+        <p class="text-gray-700 mb-4">Category: <%= quiz.category %>
+        </p>
+        <p class="text-red-600 font-semibold mb-4" id="timer">Time left: <%= timeLimit %>:00</p>
+
+        <form action="/quizzes/take/<%= quiz._id %>" method="POST" id="quizForm">
+            <% quiz.questions.forEach((q, idx)=> { %>
+                <div class="mb-4 p-4 border rounded">
+                    <p class="font-semibold mb-2">
+                        <%= idx + 1 %>. <%= q.question %>
+                    </p>
+                    <% q.options.forEach(option=> { %>
+                        <label class="block mb-1">
+                            <input type="radio" name="<%= idx %>" value="<%= option %>" required>
+                            <%= option %>
+                        </label>
+                        <% }) %>
+                </div>
+                <% }) %>
+
+                    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+                        Submit Quiz
+                    </button>
+        </form>
+    </div>
+
+    <script>
+        // Timer in seconds
+        let timeLeft = <%= timeLimit * 60 %>;
+        const timerEl = document.getElementById('timer');
+        const form = document.getElementById('quizForm');
+
+        const countdown = setInterval(() => {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerEl.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            timeLeft--;
+
+            if (timeLeft < 0) {
+                clearInterval(countdown);
+                alert("Time's up! Your quiz will be submitted automatically.");
+                form.submit();
+            }
+        }, 1000);
+    </script>
+
+    <%- include('../partials/footer') %>

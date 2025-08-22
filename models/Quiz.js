@@ -9,6 +9,7 @@ const questionSchema = new mongoose.Schema({
 const quizSchema = new mongoose.Schema({
   title: { type: String, required: true },
   category: { type: String, required: true },
+  cover: { type: String, default: '/images/default-quiz.jpg' }, // Cover image URL
   questions: [questionSchema],
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   active: { type: Boolean, default: true }

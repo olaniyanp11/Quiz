@@ -8,6 +8,23 @@ const getUser =require('../middlewares/getUser');
 const Quiz = require('../models/Quiz');
 const Score = require('../models/Score');
 
+const multer = require('multer');
+const path = require('path');
+
+// Storage config
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '/uploads/app-images/'); // folder to save images
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage: storage });
+
+
 function isAdmin(req, res, next) {
   if (req.user.role !== 'admin') {
     req.flash('error', 'Access denied.');
@@ -30,8 +47,11 @@ router.get('/login', getUser, (req, res) => {
 });
 
 // POST /register
-router.post('/register', async (req, res) => {
+// Make sure your form uses enctype="multipart/form-data"
+router.post('/register', upload.single('profilePic'), async (req, res) => {
     const { name, email, password } = req.body;
+    const profilePic = req.file ? '/app-images/' + req.file.filename : '/default.jpg';
+
     try {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
@@ -45,7 +65,15 @@ router.post('/register', async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ name, email, password: hashedPassword });
+
+        const newUser = new User({ 
+            name, 
+            email, 
+            password: hashedPassword,
+            profilePic,
+            rating: 0
+        });
+
         await newUser.save();
 
         req.flash('success', 'Account created successfully. Please login.');
@@ -56,6 +84,7 @@ router.post('/register', async (req, res) => {
         res.redirect('/register');
     }
 });
+
 
 // POST /login
 router.post('/login', async (req, res) => {
@@ -89,24 +118,42 @@ router.post('/login', async (req, res) => {
 });
 
 // GET /dashboard
-router.get('/dashboard', authenticateToken, async (req, res) => {
-    try {
-        const user = await User.findById(req.user.userId);
-        if (!user) {
-            req.flash('error', 'User not found.');
-            return res.redirect('/login');
-        }
-
-        res.render('protected/dashboard', {
-            title: 'Dashboard',
-            user, user: req.user
-        });
-    } catch (error) {
-        console.error(error);
-        req.flash('error', 'Something went wrong.');
-        res.redirect('/login');
+router.get('/dashboard', authenticateToken, getUser, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      req.flash('error', 'User not found.');
+      return res.redirect('/login');
     }
+
+    // Get all quizzes
+    const quizzes = await Quiz.find({ active: true });
+
+    // Get all scores for this user
+    const userScores = await Score.find({ user: user._id }).populate('quiz');
+
+    // Map quiz titles and scores for chart
+    const userQuizLabels = userScores.map(s => s.quiz.title);
+    const userQuizScores = userScores.map(s => s.score);
+
+    // Determine top score
+    const userTopScore = userScores.length > 0 ? Math.max(...userQuizScores) : 0;
+
+    res.render('protected/dashboard', {
+      title: 'Dashboard',
+      user,
+      totalQuizzes: quizzes.length,
+      userTopScore,
+      userQuizLabels,
+      userQuizScores
+    });
+  } catch (error) {
+    console.error(error);
+    req.flash('error', 'Something went wrong.');
+    res.redirect('/login');
+  }
 });
+
 router.get('/admin', authenticateToken,getUser, isAdmin, async (req, res) => {
   const totalQuizzes = await Quiz.countDocuments();
   const totalUsers = await User.countDocuments({ role: 'user' });
@@ -126,11 +173,65 @@ router.get('/admin', authenticateToken,getUser, isAdmin, async (req, res) => {
   });
 });
 
+
+router.get('/users', authenticateToken, getUser, isAdmin, async (req, res) => {
+  try {
+    const users = await User.find({ role: 'user' }); // Exclude admins
+    res.render('protected/admin/users', { title: 'All Users', users, user: req.user });
+  } catch (err) {
+    console.error(err);
+    req.flash('error', 'Could not fetch users.');
+    res.redirect('/admin');
+  }
+});
+
+// DELETE user
+router.post('/users/delete/:id', authenticateToken, getUser, isAdmin, async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    req.flash('success', 'User deleted successfully.');
+    res.redirect('/admin/users');
+  } catch (err) {
+    console.error(err);
+    req.flash('error', 'Could not delete user.');
+    res.redirect('/users');
+  }
+});
+
+router.get('/leaderboard', authenticateToken, getUser, async (req, res) => {
+  try {
+    // Aggregate total score per user
+    const leaderboard = await Score.aggregate([
+      { 
+        $group: { 
+          _id: "$user", 
+          totalScore: { $sum: "$score" }, 
+          quizzesTaken: { $sum: 1 } 
+        } 
+      },
+      { $sort: { totalScore: -1 } },
+      { $limit: 10 } // top 10 users
+    ]);
+
+    // Populate user details (_id now contains user info)
+    const results = await User.populate(leaderboard, { path: "_id", select: "name profilePic rating" });
+
+    res.render('leaderboard', { 
+      title: 'Leaderboard', 
+      leaderboard: results, 
+      user: req.user 
+    });
+  } catch (err) {
+    console.error(err);
+    req.flash('error', 'Could not load leaderboard.');
+    res.redirect('/');
+  }
+});
+
 // GET /logout
 router.get('/logout', (req, res) => {
     res.clearCookie('token');
     req.flash('success', 'You have logged out.');
     res.redirect('/login');
 });
-
 module.exports = router;

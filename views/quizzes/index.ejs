@@ -1,21 +1,30 @@
 <%- include('../partials/header') %>
 
-<div class="max-w-6xl mx-auto mt-24 px-4">
-  <h1 class="text-3xl font-bold mb-6 text-green-800">Available Quizzes</h1>
+  <div class="max-w-6xl mx-auto mt-24 px-4">
+    <h1 class="text-3xl font-bold mb-6 text-green-800">Available Quizzes</h1>
 
-  <% if (quizzes.length === 0) { %>
-    <p class="text-gray-700">No quizzes available right now. Check back later!</p>
-  <% } else { %>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <% quizzes.forEach(quiz => { %>
-        <div class="bg-white rounded shadow p-6">
-          <h2 class="text-xl font-semibold mb-2 text-green-700"><%= quiz.title %></h2>
-          <p class="text-gray-700 mb-4">Category: <%= quiz.category %></p>
-          <a href="/quizzes/take/<%= quiz._id %>" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Take Quiz</a>
+    <% if (quizzes.length===0) { %>
+      <p class="text-gray-700">No quizzes available right now. Check back later!</p>
+      <% } else { %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% quizzes.forEach(quiz=> { %>
+            <div class="bg-white rounded shadow overflow-hidden">
+              <% if (quiz.cover) { %>
+                <img src="<%= quiz.cover %>" alt="Quiz Cover" class="w-full h-40 object-cover">
+                <% } %>
+                  <div class="p-6">
+                    <h2 class="text-xl font-semibold mb-2 text-green-700">
+                      <%= quiz.title %>
+                    </h2>
+                    <p class="text-gray-700 mb-4">Category: <%= quiz.category %>
+                    </p>
+                    <a href="/quizzes/take/<%= quiz._id %>"
+                      class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Take Quiz</a>
+                  </div>
+            </div>
+            <% }) %>
         </div>
-      <% }) %>
-    </div>
-  <% } %>
-</div>
+        <% } %>
+  </div>
 
-<%- include('../partials/footer') %>
+  <%- include('../partials/footer') %>

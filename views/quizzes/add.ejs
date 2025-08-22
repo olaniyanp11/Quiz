@@ -1,44 +1,60 @@
 <%- include('../partials/header') %>
 
-<div class="max-w-4xl mx-auto p-6 mt-20 bg-white rounded shadow">
-  <h1 class="text-2xl font-bold mb-6 text-green-800">Add New Quiz</h1>
+  <div class="max-w-4xl mx-auto p-6 mt-20 bg-white rounded shadow">
+    <h1 class="text-2xl font-bold mb-6 text-green-800">Add New Quiz</h1>
 
-
-  <form action="/quizzes/add" method="POST">
-    <div class="mb-4">
-      <label class="block text-gray-700 font-semibold mb-2">Title</label>
-      <input type="text" name="title" class="w-full border px-3 py-2 rounded" required>
-    </div>
-
-         <input type="text" name="category" placeholder="Category" class="w-full border px-3 py-2 rounded mb-2" required>
-
-
-    <div id="questions-container">
-      <h2 class="text-lg font-semibold mb-2">Questions</h2>
-
-      <div class="question-block mb-4 border p-4 rounded">
-        <input type="text" name="questions[0][question]" placeholder="Question" class="w-full border px-3 py-2 rounded mb-2" required>
-        <input type="text" name="questions[0][options][]" placeholder="Option 1" class="w-full border px-3 py-2 rounded mb-2" required>
-        <input type="text" name="questions[0][options][]" placeholder="Option 2" class="w-full border px-3 py-2 rounded mb-2" required>
-        <input type="text" name="questions[0][options][]" placeholder="Option 3" class="w-full border px-3 py-2 rounded mb-2" required>
-        <input type="text" name="questions[0][options][]" placeholder="Option 4" class="w-full border px-3 py-2 rounded mb-2" required>
-        <input type="text" name="questions[0][answer]" placeholder="Correct Answer" class="w-full border px-3 py-2 rounded" required>
+    <form action="/quizzes/add" method="POST" enctype="multipart/form-data">
+      <!-- Quiz Title -->
+      <div class="mb-4">
+        <label class="block text-gray-700 font-semibold mb-2">Title</label>
+        <input type="text" name="title" class="w-full border px-3 py-2 rounded" required>
       </div>
-    </div>
 
-    <button type="button" id="add-question" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4">Add Another Question</button>
-    <br>
-    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">Save Quiz</button>
-  </form>
-</div>
+      <!-- Category -->
+      <div class="mb-4">
+        <input type="text" name="category" placeholder="Category" class="w-full border px-3 py-2 rounded" required>
+      </div>
 
-<script>
-  let questionIndex = 1;
-  document.getElementById('add-question').addEventListener('click', function() {
-    const container = document.getElementById('questions-container');
-    const div = document.createElement('div');
-    div.classList.add('question-block','mb-4','border','p-4','rounded');
-    div.innerHTML = `
+      <!-- Cover Image -->
+      <div class="mb-4">
+        <label class="block text-gray-700 font-semibold mb-2">Cover Image (optional)</label>
+        <input type="file" name="cover" accept="image/*" class="w-full border px-3 py-2 rounded">
+      </div>
+
+      <!-- Questions -->
+      <div id="questions-container">
+        <h2 class="text-lg font-semibold mb-2">Questions</h2>
+
+        <div class="question-block mb-4 border p-4 rounded">
+          <input type="text" name="questions[0][question]" placeholder="Question"
+            class="w-full border px-3 py-2 rounded mb-2" required>
+          <input type="text" name="questions[0][options][]" placeholder="Option 1"
+            class="w-full border px-3 py-2 rounded mb-2" required>
+          <input type="text" name="questions[0][options][]" placeholder="Option 2"
+            class="w-full border px-3 py-2 rounded mb-2" required>
+          <input type="text" name="questions[0][options][]" placeholder="Option 3"
+            class="w-full border px-3 py-2 rounded mb-2" required>
+          <input type="text" name="questions[0][options][]" placeholder="Option 4"
+            class="w-full border px-3 py-2 rounded mb-2" required>
+          <input type="text" name="questions[0][answer]" placeholder="Correct Answer"
+            class="w-full border px-3 py-2 rounded" required>
+        </div>
+      </div>
+
+      <button type="button" id="add-question"
+        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4">Add Another Question</button>
+      <br>
+      <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">Save Quiz</button>
+    </form>
+  </div>
+
+  <script>
+    let questionIndex = 1;
+    document.getElementById('add-question').addEventListener('click', function () {
+      const container = document.getElementById('questions-container');
+      const div = document.createElement('div');
+      div.classList.add('question-block', 'mb-4', 'border', 'p-4', 'rounded');
+      div.innerHTML = `
       <input type="text" name="questions[${questionIndex}][question]" placeholder="Question" class="w-full border px-3 py-2 rounded mb-2" required>
       <input type="text" name="questions[${questionIndex}][options][]" placeholder="Option 1" class="w-full border px-3 py-2 rounded mb-2" required>
       <input type="text" name="questions[${questionIndex}][options][]" placeholder="Option 2" class="w-full border px-3 py-2 rounded mb-2" required>
@@ -46,9 +62,9 @@
       <input type="text" name="questions[${questionIndex}][options][]" placeholder="Option 4" class="w-full border px-3 py-2 rounded mb-2" required>
       <input type="text" name="questions[${questionIndex}][answer]" placeholder="Correct Answer" class="w-full border px-3 py-2 rounded" required>
     `;
-    container.appendChild(div);
-    questionIndex++;
-  });
-</script>
+      container.appendChild(div);
+      questionIndex++;
+    });
+  </script>
 
-<%- include('../partials/footer') %>
+  <%- include('../partials/footer') %>
