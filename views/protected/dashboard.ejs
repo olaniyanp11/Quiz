@@ -15,6 +15,15 @@
                         <a href="/quizzes" class="block px-4 py-2 rounded hover:bg-green-700">
                               <i class="fa-solid fa-list mr-2"></i>All Quizzes
                         </a>
+                        <a href="/quizzes/add" class="block px-4 py-2 rounded hover:bg-green-700">
+                              <i class="fa-solid fa-plus mr-2"></i>Add Quiz
+                        </a>
+                        <a href="/leaderboard" class="block px-4 py-2 rounded hover:bg-green-700">
+                              <i class="fa-solid fa-trophy mr-2"></i>Leaderboard
+                        </a>
+                        <a href="/profile" class="block px-4 py-2 rounded hover:bg-green-700">
+                              <i class="fa-solid fa-user-pen mr-2"></i>Profile
+                        </a>
                         <a href="/logout" class="block px-4 py-2 rounded hover:bg-red-600">
                               <i class="fa-solid fa-right-from-bracket mr-2"></i>Logout
                         </a>
@@ -68,28 +77,28 @@
 
       <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.0/chart.umd.min.js"></script>
       <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-     <script>
-      $(document).ready(function () {
-            const ctx = document.getElementById('quizProgressChart').getContext('2d');
-            const quizProgressChart = new Chart(ctx, {
-                  type: 'bar',
-                  data: {
-                        labels: <% - JSON.stringify(userQuizLabels) %>,
-                        datasets: [{
-                              label: 'Your Score',
-                              data: <% - JSON.stringify(userQuizScores) %>,
-                              backgroundColor: 'rgba(34,197,94,0.7)',
-                              borderColor: 'rgba(34,197,94,1)',
-                              borderWidth: 1
-                        }]
-                  },
-                  options: {
-                        responsive: true,
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true } }
-                  }
+      <script>
+            $(document).ready(function () {
+                  const ctx = document.getElementById('quizProgressChart').getContext('2d');
+                  const quizProgressChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                              labels: <% - JSON.stringify(userQuizLabels) %>,  // quiz titles user attempted
+                              datasets: [{
+                                    label: 'Your Score',
+                                    data: <% - JSON.stringify(userQuizScores) %>, // corresponding scores
+                                    backgroundColor: 'rgba(34,197,94,0.7)',
+                                    borderColor: 'rgba(34,197,94,1)',
+                                    borderWidth: 1
+                              }]
+                        },
+                        options: {
+                              responsive: true,
+                              plugins: { legend: { display: false } },
+                              scales: { y: { beginAtZero: true, max: 100 } }
+                        }
+                  });
             });
-      });
-</script>
+      </script>
 
       <%- include('../partials/footer') %>
