@@ -24,8 +24,9 @@
                                     <%= idx + 1 %>
                                 </td>
                                 <td class="px-4 py-2 border flex items-center space-x-2">
-                                    <img src="<%= entry._id.profilePic || '/images/default-avatar.png' %>"
+                                    <img src="<%= entry._id.profilePic %>"
                                         class="w-8 h-8 rounded-full">
+                                        
                                     <span>
                                         <%= entry._id.name %>
                                     </span>

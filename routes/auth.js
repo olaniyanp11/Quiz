@@ -7,21 +7,27 @@ const authenticateToken = require('../middlewares/checkLog');
 const getUser =require('../middlewares/getUser');
 const Quiz = require('../models/Quiz');
 const Score = require('../models/Score');
-
+const fs = require('fs');
 const multer = require('multer');
 const path = require('path');
 
 // Storage config
+const uploadPath = path.join(__dirname, '../uploads/app-images'); // adjust relative path
+
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true }); // create folder if it doesn't exist
+}
+
+// Multer storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '/uploads/app-images/'); // folder to save images
+    cb(null, uploadPath); // use the folder that exists
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     cb(null, uniqueSuffix + path.extname(file.originalname));
   }
 });
-
 const upload = multer({ storage: storage });
 
 
@@ -138,7 +144,7 @@ router.get('/dashboard', authenticateToken, getUser, async (req, res) => {
 
     // Determine top score
     const userTopScore = userScores.length > 0 ? Math.max(...userQuizScores) : 0;
-
+console.log(userTopScore, userQuizScores, userQuizLabels);
     res.render('protected/dashboard', {
       title: 'Dashboard',
       user,
@@ -238,26 +244,35 @@ router.get('/profile', authenticateToken, getUser, async (req, res) => {
         error: req.flash('error')
     });
 });
-
 // POST update profile
 router.post('/profile', authenticateToken, getUser, upload.single('profilePic'), async (req, res) => {
-    try {
-        const { name, email, password } = req.body;
-        const user = await User.findById(req.user._id);
+  try {
+    const { name, email, password } = req.body;
+    const user = await User.findById(req.user._id);
 
-        if (name) user.name = name;
-        if (email) user.email = email;
-        if (password) user.password = password; // Make sure to hash password in User model pre-save hook
-        if (req.file) user.profilePic = '/uploads/' + req.file.filename;
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (password) user.password = password; // Make sure to hash password in User model pre-save hook
 
-        await user.save();
-        req.flash('success', 'Profile updated successfully.');
-        res.redirect('/profile');
-    } catch (err) {
-        console.error(err);
-        req.flash('error', 'Failed to update profile.');
-        res.redirect('/profile');
+    if (req.file) {
+      // Unlink previous profile picture if not default
+      if (user.profilePic && user.profilePic !== '/default.jpg') {
+        const oldPicPath = path.join(uploadPath, path.basename(user.profilePic));
+        fs.unlink(oldPicPath, err => {
+          // Ignore error if file doesn't exist
+        });
+      }
+      user.profilePic = '/app-images/' + req.file.filename;
     }
+
+    await user.save();
+    req.flash('success', 'Profile updated successfully.');
+    res.redirect('/profile');
+  } catch (err) {
+    console.error(err);
+    req.flash('error', 'Failed to update profile.');
+    res.redirect('/profile');
+  }
 });
 router.get('/logout', (req, res) => {
     res.clearCookie('token');

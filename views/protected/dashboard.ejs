@@ -1,104 +1,102 @@
 <%- include('../partials/header') %>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-      <div class="flex min-h-screen bg-gray-100">
+<div class="flex min-h-screen bg-gray-100">
 
-            <!-- Sidebar -->
-            <aside class="w-64 bg-green-800 text-white flex flex-col">
-                  <div class="p-6 text-2xl font-bold">
-                        <i class="fa-solid fa-user mr-2"></i>QuizApp
-                  </div>
-                  <nav class="flex-1 px-4 space-y-2">
-                        <a href="/dashboard" class="block px-4 py-2 rounded hover:bg-green-700">
-                              <i class="fa-solid fa-gauge-high mr-2"></i>Dashboard
-                        </a>
-                        <a href="/quizzes" class="block px-4 py-2 rounded hover:bg-green-700">
-                              <i class="fa-solid fa-list mr-2"></i>All Quizzes
-                        </a>
-                        <a href="/quizzes/add" class="block px-4 py-2 rounded hover:bg-green-700">
-                              <i class="fa-solid fa-plus mr-2"></i>Add Quiz
-                        </a>
-                        <a href="/leaderboard" class="block px-4 py-2 rounded hover:bg-green-700">
-                              <i class="fa-solid fa-trophy mr-2"></i>Leaderboard
-                        </a>
-                        <a href="/profile" class="block px-4 py-2 rounded hover:bg-green-700">
-                              <i class="fa-solid fa-user-pen mr-2"></i>Profile
-                        </a>
-                        <a href="/logout" class="block px-4 py-2 rounded hover:bg-red-600">
-                              <i class="fa-solid fa-right-from-bracket mr-2"></i>Logout
-                        </a>
-                  </nav>
-            </aside>
+    <!-- Sidebar -->
+    <aside class="w-64 bg-green-800 text-white flex flex-col">
+        <div class="p-6 text-2xl font-bold">
+            <i class="fa-solid fa-user mr-2"></i>QuizApp
+        </div>
+        <nav class="flex-1 px-4 space-y-2">
+            <a href="/dashboard" class="block px-4 py-2 rounded hover:bg-green-700">
+                <i class="fa-solid fa-gauge-high mr-2"></i>Dashboard
+            </a>
+            <a href="/quizzes" class="block px-4 py-2 rounded hover:bg-green-700">
+                <i class="fa-solid fa-list mr-2"></i>All Quizzes
+            </a>
+            <a href="/leaderboard" class="block px-4 py-2 rounded hover:bg-green-700">
+                <i class="fa-solid fa-trophy mr-2"></i>Leaderboard
+            </a>
+            <a href="/profile" class="block px-4 py-2 rounded hover:bg-green-700">
+                <i class="fa-solid fa-user-pen mr-2"></i>Profile
+            </a>
+            <a href="/logout" class="block px-4 py-2 rounded hover:bg-red-600">
+                <i class="fa-solid fa-right-from-bracket mr-2"></i>Logout
+            </a>
+        </nav>
+    </aside>
 
-            <!-- Main Content -->
-            <main class="flex-1 p-6">
-                  <h1 class="text-3xl font-bold mb-6 text-green-800">
-                        <i class="fa-solid fa-gauge-high mr-2"></i>Dashboard
-                  </h1>
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+        <h1 class="text-3xl font-bold mb-6 text-green-800">
+            <i class="fa-solid fa-gauge-high mr-2"></i>Dashboard
+        </h1>
 
-                  <!-- Cards -->
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                        <div class="bg-white p-6 rounded shadow">
-                              <h2 class="text-xl font-semibold mb-2">
-                                    <i class="fa-solid fa-clipboard-question mr-2"></i>Total Quizzes
-                              </h2>
-                              <p class="text-3xl font-bold text-green-700">
-                                    <%= totalQuizzes %>
-                              </p>
-                        </div>
-                        <div class="bg-white p-6 rounded shadow">
-                              <h2 class="text-xl font-semibold mb-2">
-                                    <i class="fa-solid fa-trophy mr-2"></i>Your Top Score
-                              </h2>
-                              <p class="text-3xl font-bold text-green-700">
-                                    <%= userTopScore %>
-                              </p>
-                        </div>
-                        <div class="bg-white p-6 rounded shadow">
-                              <h2 class="text-xl font-semibold mb-2">
-                                    <i class="fa-solid fa-star mr-2"></i>Your Rating
-                              </h2>
-                              <p class="text-3xl font-bold text-green-700">
-                                    <%= user.rating %>
-                              </p>
-                        </div>
-                  </div>
+        <!-- Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded shadow">
+                <h2 class="text-xl font-semibold mb-2">
+                    <i class="fa-solid fa-clipboard-question mr-2"></i>Total Quizzes
+                </h2>
+                <p class="text-3xl font-bold text-green-700"><%= totalQuizzes %></p>
+            </div>
+            <div class="bg-white p-6 rounded shadow">
+                <h2 class="text-xl font-semibold mb-2">
+                    <i class="fa-solid fa-trophy mr-2"></i>Your Top Score
+                </h2>
+                <p class="text-3xl font-bold text-green-700"><%= userTopScore %></p>
+            </div>
+            <div class="bg-white p-6 rounded shadow">
+                <h2 class="text-xl font-semibold mb-2">
+                    <i class="fa-solid fa-star mr-2"></i>Your Rating
+                </h2>
+                <p class="text-3xl font-bold text-green-700"><%= user.rating %></p>
+            </div>
+        </div>
 
-                  <!-- Charts -->
-                  <div class="bg-white p-6 rounded shadow mb-8">
-                        <h2 class="text-xl font-semibold mb-4">
-                              <i class="fa-solid fa-chart-column mr-2"></i>Quiz Progress
-                        </h2>
-                        <canvas id="quizProgressChart" class="w-full h-64"></canvas>
-                  </div>
+        <!-- Charts -->
+        <div class="bg-white p-6 rounded shadow mb-8">
+            <h2 class="text-xl font-semibold mb-4">
+                <i class="fa-solid fa-chart-column mr-2"></i>Quiz Progress
+            </h2>
+            <canvas id="quizProgressChart" class="w-full h-64"></canvas>
+        </div>
 
-            </main>
-      </div>
+    </main>
+</div>
 
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.0/chart.umd.min.js"></script>
-      <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-      <script>
-            $(document).ready(function () {
-                  const ctx = document.getElementById('quizProgressChart').getContext('2d');
-                  const quizProgressChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                              labels: <% - JSON.stringify(userQuizLabels) %>,  // quiz titles user attempted
-                              datasets: [{
-                                    label: 'Your Score',
-                                    data: <% - JSON.stringify(userQuizScores) %>, // corresponding scores
-                                    backgroundColor: 'rgba(34,197,94,0.7)',
-                                    borderColor: 'rgba(34,197,94,1)',
-                                    borderWidth: 1
-                              }]
-                        },
-                        options: {
-                              responsive: true,
-                              plugins: { legend: { display: false } },
-                              scales: { y: { beginAtZero: true, max: 100 } }
-                        }
-                  });
-            });
-      </script>
+<!-- Embed user quiz data safely -->
+<script id="userQuizData" type="application/json">
+  <%- JSON.stringify({ labels: userQuizLabels, scores: userQuizScores }) %>
+</script>
 
-      <%- include('../partials/footer') %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.0/chart.umd.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const quizDataEl = document.getElementById("userQuizData");
+    const quizData = JSON.parse(quizDataEl.textContent);
+
+    const ctx = document.getElementById('quizProgressChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: quizData.labels,
+            datasets: [{
+                label: 'Your Score',
+                data: quizData.scores,
+                backgroundColor: 'rgba(34,197,94,0.7)',
+                borderColor: 'rgba(34,197,94,1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, max: 100 } }
+        }
+    });
+});
+</script>
+
+<%- include('../partials/footer') %>
