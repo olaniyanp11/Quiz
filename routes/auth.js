@@ -228,7 +228,37 @@ router.get('/leaderboard', authenticateToken, getUser, async (req, res) => {
   }
 });
 
-// GET /logout
+
+// GET profile page
+router.get('/profile', authenticateToken, getUser, async (req, res) => {
+    res.render('profile', { 
+        title: 'Update Profile', 
+        user: req.user, 
+        success: req.flash('success'),
+        error: req.flash('error')
+    });
+});
+
+// POST update profile
+router.post('/profile', authenticateToken, getUser, upload.single('profilePic'), async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+        const user = await User.findById(req.user._id);
+
+        if (name) user.name = name;
+        if (email) user.email = email;
+        if (password) user.password = password; // Make sure to hash password in User model pre-save hook
+        if (req.file) user.profilePic = '/uploads/' + req.file.filename;
+
+        await user.save();
+        req.flash('success', 'Profile updated successfully.');
+        res.redirect('/profile');
+    } catch (err) {
+        console.error(err);
+        req.flash('error', 'Failed to update profile.');
+        res.redirect('/profile');
+    }
+});
 router.get('/logout', (req, res) => {
     res.clearCookie('token');
     req.flash('success', 'You have logged out.');

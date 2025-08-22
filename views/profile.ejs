@@ -1,0 +1,51 @@
+<%- include('./partials/header') %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <div class="max-w-2xl mx-auto mt-24 p-6 bg-white rounded shadow">
+        <h1 class="text-3xl font-bold mb-6 text-green-800">Update Profile</h1>
+
+        <% if (success && success.length) { %>
+            <p class="text-green-600 mb-4">
+                <%= success %>
+            </p>
+            <% } %>
+                <% if (error && error.length) { %>
+                    <p class="text-red-600 mb-4">
+                        <%= error %>
+                    </p>
+                    <% } %>
+
+                        <form action="/profile" method="POST" enctype="multipart/form-data" class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700">Name</label>
+                                <input type="text" name="name" value="<%= user.name %>"
+                                    class="w-full border rounded p-2" required>
+                            </div>
+
+                            <div>
+                                <label class="block text-gray-700">Email</label>
+                                <input type="email" name="email" value="<%= user.email %>"
+                                    class="w-full border rounded p-2" required>
+                            </div>
+
+                            <div>
+                                <label class="block text-gray-700">New Password</label>
+                                <input type="password" name="password" placeholder="Enter new password"
+                                    class="w-full border rounded p-2">
+                            </div>
+
+                            <div>
+                                <label class="block text-gray-700">Profile Picture</label>
+                                <input type="file" name="profilePic" class="w-full border rounded p-2">
+                                <% if(user.profilePic) { %>
+                                    <img src="<%= user.profilePic %>" alt="Profile" class="w-16 h-16 mt-2 rounded-full">
+                                    <% } %>
+                            </div>
+
+                            <button type="submit" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800">
+                                Update Profile
+                            </button>
+                        </form>
+    </div>
+
+    <%- include('./partials/footer') %>
